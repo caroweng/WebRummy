@@ -2,9 +2,8 @@ package controllers
 
 import de.htwg.se.rummy.Rummy
 import de.htwg.se.rummy.controller.ControllerInterface
-import de.htwg.se.rummy.util.Observer
+import de.htwg.se.rummy.view.component.Tui
 import javax.inject._
-import play.api._
 import play.api.mvc._
 
 
@@ -29,7 +28,12 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
     Ok(views.html.index())
   }
 
-  def rummy(): Action[AnyContent] = Action {
+
+  def rummy(input: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    val tui = new Tui(rummyController)
+    val name = input.replace(":input=", "")
+    tui.processInput(name)
     Ok(rummyAsString)
   }
+
 }
