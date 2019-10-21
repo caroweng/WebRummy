@@ -14,8 +14,10 @@ import play.api.mvc._
 @Singleton
 class RummyController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
   val rummyController: ControllerInterface = Rummy.controller
-  rummyController.add((s: String) => rummyAsString = s)
   var rummyAsString: String = ""
+  rummyController.add(() => {
+    rummyAsString = rummyController.currentStateAsString()
+  })
 
   /**
    * Create an Action to render an HTML page.
@@ -25,7 +27,7 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
    * a path of `/`.
    */
   def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+    Ok(rummyController.currentStateAsString())
   }
 
 
