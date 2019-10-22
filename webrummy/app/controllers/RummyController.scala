@@ -32,7 +32,7 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
     }
 
     def newGame(): Action[AnyContent] = Action{
-        Ok(views.html.rummy(rummyController, this))
+        Ok(views.html.rummy(rummyController))
     }
 
     def rules(): Action[AnyContent] = Action {
@@ -54,7 +54,7 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
              correctInput = input.replace(":input=", "")
         }
         processInput(correctInput)
-        Ok(views.html.rummy(rummyController, this))
+        Ok(views.html.rummy(rummyController))
     }
 
     def processInput(input: String): Unit = {

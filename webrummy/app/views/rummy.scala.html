@@ -1,6 +1,6 @@
 @import de.htwg.se.rummy.controller.ControllerInterface
 @import de.htwg.se.rummy.controller.component.ControllerState
-@(controller: ControllerInterface, rummyController: RummyController)
+@(controller: ControllerInterface)
 
 
 @main("HTWG Rummy") {
@@ -11,7 +11,7 @@
                 <input type="submit" value="New Game"/>
             </form>
             <br/>
-            <form action=@rummyController.rummy("l")>
+            <form action=@controllers.routes.RummyController.rummy("l")>
                 <input type="submit" value="Load Game"/>
             </form>
         }
@@ -25,6 +25,12 @@
             <br/>
             <form action=@controllers.routes.RummyController.rummy("f")>
                 <input type="submit" value="Start game"/>
+            </form>
+            <form action=@controllers.routes.RummyController.rummy("z")>
+                <input type="submit" value="Undo"/>
+            </form>
+            <form action=@controllers.routes.RummyController.rummy("r")>
+                <input type="submit" value="Redo"/>
             </form>
         }
         @if(controller.controllerState == ControllerState.P_TURN) {
