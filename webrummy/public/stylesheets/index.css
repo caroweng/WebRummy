@@ -1,4 +1,11 @@
 .welcome {
     text-align: center;
     font-family: "Lucida Grande", Helvetica, sans-serif;
+    border-style: solid;
+    border-color: darksalmon;
+    border-radius: 20px;
+    padding: 20px;
+    padding-bottom: 40px;
+    width: 800px;
+    margin: auto;
 }

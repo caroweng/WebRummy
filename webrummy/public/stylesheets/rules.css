@@ -22,6 +22,21 @@ h3 {
     padding: 10px;
 }
 
-.playButton {
+.centeredButton {
     text-align: center;
+}
+
+.playButton {
+    border-radius: 5px;
+    background-color: darksalmon;
+    color: white;
+    border-color: darksalmon;
+    padding: 5px 5px;
+    border: solid thin;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 22px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
