@@ -4,34 +4,39 @@
 
 
 @main("HTWG Rummy") {
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/rummy.css")' />
     <div>
         @if(controller.controllerState == ControllerState.NEW_GAME) {
-            <h1>Menu</h1>
-            <form action=@controllers.routes.RummyController.rummy("c")>
-                <input type="submit" value="New Game"/>
-            </form>
-            <br/>
-            <form action=@controllers.routes.RummyController.rummy("l")>
-                <input type="submit" value="Load Game"/>
-            </form>
+            <div class="creatingNewGame">
+                <h1>Menu</h1>
+                <form action=@controllers.routes.RummyController.rummy("c")>
+                    <input type="submit" value="New Game"/>
+                </form>
+                <br/>
+                <form action=@controllers.routes.RummyController.rummy("l")>
+                    <input type="submit" value="Load Game"/>
+                </form>
+            </div>
         }
         @if(controller.controllerState == ControllerState.INSERTING_NAMES) {
-            <h1>Insert Names</h1>
-            <form action=@controllers.routes.RummyController.rummy("name Caro")>
-                <label for="nameInput">Name</label>
-                <input type="text" value="" id="nameInput"/>
-                <input type="submit" value="confirm"/>
-            </form>
-            <br/>
-            <form action=@controllers.routes.RummyController.rummy("f")>
-                <input type="submit" value="Start game"/>
-            </form>
-            <form action=@controllers.routes.RummyController.rummy("z")>
-                <input type="submit" value="Undo"/>
-            </form>
-            <form action=@controllers.routes.RummyController.rummy("r")>
-                <input type="submit" value="Redo"/>
-            </form>
+            <div class="insertingNames">
+                <h1>Insert Names</h1>
+                <form action=@controllers.routes.RummyController.rummy("name Caro")>
+                    <label for="nameInput">Name</label>
+                    <input type="text" value="" id="nameInput"/>
+                    <input type="submit" value="confirm"/>
+                </form>
+                <br/>
+                <form action=@controllers.routes.RummyController.rummy("f")>
+                    <input type="submit" value="Start game"/>
+                </form>
+                <form action=@controllers.routes.RummyController.rummy("z")>
+                    <input type="submit" value="Undo"/>
+                </form>
+                <form action=@controllers.routes.RummyController.rummy("r")>
+                    <input type="submit" value="Redo"/>
+                </form>
+            </div>
         }
         @if(controller.controllerState == ControllerState.P_TURN) {
             <div>

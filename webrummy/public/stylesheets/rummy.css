@@ -1,0 +1,21 @@
+.creatingNewGame {
+    font-family: "Lucida Grande", Helvetica, sans-serif;
+    text-align: center;
+    border-style: solid;
+    border-color: darksalmon;
+    border-radius: 20px;
+    padding: 20px;
+    width: 800px;
+    margin: auto;
+}
+
+.insertingNames {
+    font-family: "Lucida Grande", Helvetica, sans-serif;
+    text-align: center;
+    border-style: solid;
+    border-color: darksalmon;
+    border-radius: 20px;
+    padding: 20px;
+    width: 800px;
+    margin: auto;
+}
