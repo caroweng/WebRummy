@@ -1,7 +1,9 @@
 .rules{
     font-family: "Lucida Grande", Helvetica, sans-serif;
     width: 800px;
-    margin: 20px;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 h1 {
@@ -17,7 +19,7 @@ h3 {
     border-style: solid;
     border-color: darksalmon;
     margin: 5px;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 10px;
 }
 
