@@ -1,7 +1,8 @@
 .game {
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 915px;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .creatingNewGame {
@@ -11,8 +12,18 @@
     border-color: darksalmon;
     border-radius: 20px;
     padding: 20px;
-    width: 800px;
+    width: 915px;
     margin: auto;
+}
+
+.creatingNewGameForms > form {
+    margin: 10px;
+    text-align: center;
+    display: inline-block;
+}
+
+.insertingNamesInputs > input {
+    margin: 3px;
 }
 
 .insertingNames {
@@ -22,13 +33,18 @@
     border-color: darksalmon;
     border-radius: 20px;
     padding: 20px;
-    width: 800px;
+    width: 915px;
     margin: auto;
+}
+
+.insertingNames > form {
+    display: inline-block;
 }
 
 .section {
     border-style: solid;
     border-color: darksalmon;
+    background: #fadab6;
     border-radius: 20px;
     text-align: center;
 }
@@ -58,19 +74,17 @@
 }
 
 .buttonBar {
-    display: flex;
-    flex-direction: row;
-    width: 200px;
     margin: auto;
 }
 
 .buttonBar > form {
     margin: 10px;
+    display: inline-block;
 }
 
 .tile {
     font-weight: bold;
-    border: solid thin;
+    border: none;
     border-radius: 10px;
     padding: 22px 10px;
     text-align: center;
@@ -79,29 +93,24 @@
     font-size: 26px;
     margin: 4px 2px;
     cursor: pointer;
+    background: #fcf2e6;
+    width: 50px;
+    box-shadow: inset 0px 0px 5px 5px #f2cea2;
 }
 
 .BLUE {
-    background-color: #bbd3f2;
-    border-color: #4941d9;
     color: #4941d9;
 }
 
 .YELLOW {
-    background-color: #fffccc;
-    border-color: gold;
     color: gold;
 }
 
 .GREEN {
-    background-color: #ccedce;
-    border-color: #3dc444;
-    color: #3dc444;
+    color: black;
 }
 
 .RED {
-    background-color: #f0cccc;
-    border-color: #e64949;
     color: #e64949;
 }
 

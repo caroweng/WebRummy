@@ -5,37 +5,42 @@
 
 @main("HTWG Rummy") {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/rummy.css")' />
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/index.css")' />
+    <script src='@routes.Assets.versioned("javascripts/bootstrap.min.js")'> </script>
+
     <div class="game">
         @if(controller.controllerState == ControllerState.NEW_GAME) {
             <div class="creatingNewGame">
                 <h1>Menu</h1>
-                <form action=@controllers.routes.RummyController.rummy("c")>
-                    <input type="submit" value="New Game" />
-                </form>
-                <br/>
-                <form action=@controllers.routes.RummyController.rummy("l")>
-                    <input type="submit" value="Load Game"/>
-                </form>
+                <div class="creatingNewGameForms">
+                    <form action=@controllers.routes.RummyController.rummy("c")>
+                        <input type="submit" value="New Game" class="btn btn-light button"/>
+                    </form>
+                    <form action=@controllers.routes.RummyController.rummy("l")>
+                        <input type="submit" value="Load Game" class="btn btn-light button"/>
+                    </form>
+                </div>
             </div>
         }
         @if(controller.controllerState == ControllerState.INSERTING_NAMES) {
             <div class="insertingNames">
                 <h1>Insert Names</h1>
-                    <form action=@controllers.routes.RummyController.rummy("name Caro")>
-                        <label for="nameInput">Name</label>
-                        <input type="text" value="" id="nameInput"/>
-                        <input type="submit" value="confirm"/>
-                    </form>
-                    <br/>
+                <form class="form-inline" action=@controllers.routes.RummyController.rummy("name Caro")>
+                    <div class="form-group insertingNamesInputs">
+                        <input type="text" value="" id="nameInput" class="form-control" placeholder="Name"/>
+                        <input type="submit" value="confirm" class="btn btn-light"/>
+                    </div>
+                </form>
+                <br/>
                 <div class="buttonBar">
                     <form action=@controllers.routes.RummyController.rummy("f")>
-                        <input type="submit" value="Start game"/>
+                        <input type="submit" value="Start game" class="btn btn-light button"/>
                     </form>
                     <form action=@controllers.routes.RummyController.rummy("z")>
-                        <input type="submit" value="Undo"/>
+                        <input type="submit" value="Undo" class="btn btn-light button"/>
                     </form>
                     <form action=@controllers.routes.RummyController.rummy("r")>
-                        <input type="submit" value="Redo"/>
+                        <input type="submit" value="Redo" class="btn btn-light button"/>
                     </form>
                 </div>
             </div>

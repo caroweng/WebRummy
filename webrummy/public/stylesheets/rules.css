@@ -1,8 +1,7 @@
 .rules{
     font-family: "Lucida Grande", Helvetica, sans-serif;
     width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px;
 }
 
 h1 {
@@ -24,19 +23,4 @@ h3 {
 
 .centeredButton {
     text-align: center;
-}
-
-.playButton {
-    border-radius: 5px;
-    background-color: darksalmon;
-    color: white;
-    border-color: darksalmon;
-    padding: 5px 5px;
-    border: solid thin;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 22px;
-    margin: 4px 2px;
-    cursor: pointer;
 }

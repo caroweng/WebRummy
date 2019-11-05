@@ -2,19 +2,20 @@
 
 @main("HTWG Rummy") {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/index.css")' />
+    <script src='@routes.Assets.versioned("javascripts/bootstrap.min.js")'> </script>
 
     <div class="welcome">
         <h1>Welcome to Rummy!</h1>
-        <button>
-            <a href="rules">
+        <a href="rules">
+            <button type="button" class="btn btn-light button">
                 Rules
-            </a>
-        </button>
+            </button>
+        </a>
         <br/><br/>
-        <button>
-            <a href="rummy">
+        <a href="rummy">
+            <button type="button" class="btn btn-light button">
                 Let's play!
-            </a>
-        </button>
+            </button>
+        </a>
     </div>
 }

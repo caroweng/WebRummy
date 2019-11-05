@@ -5,7 +5,17 @@
     border-color: darksalmon;
     border-radius: 20px;
     padding: 20px;
-    padding-bottom: 40px;
+    padding-bottom: 30px;
     width: 800px;
     margin: auto;
+    margin-top: 20px;
+}
+
+a {
+    color: black;
+}
+
+.button {
+    background-color: darksalmon;
+    color: white;
 }

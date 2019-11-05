@@ -1,6 +1,9 @@
 
 @main("HTWG Rummy") {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/rules.css")' />
+    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/index.css")' />
+    <script src='@routes.Assets.versioned("javascripts/bootstrap.min.js")'> </script>
+
 
     <div class="rules">
         <h1>Rules of Rummy</h1>
@@ -72,11 +75,11 @@
         </div>
 
         <div class="centeredButton">
-            <button class="playButton">
-                <a href="rummy">
+            <a href="rummy">
+                <button type="button" class="btn btn-light button">
                     Let's play!
-                </a>
-            </button>
+                </button>
+            </a>
         </div>
 
     </div>
