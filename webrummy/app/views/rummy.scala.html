@@ -59,7 +59,7 @@
                     <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("r")>
                         <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Redo"/>
                     </form>
-                    <form class="form-inlinemy-2 my-lg-0" action=@controllers.routes.RummyController.rummy("f")>
+                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("f")>
                         <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Finish"/>
                     </form>
                 </div>
@@ -69,6 +69,9 @@
                     </button>
                 </a>
             </nav>
+            <div class="alert alert-primary playerAlert" role="alert">
+                @controller.desk.getCurrentPlayer.name, it's your turn!
+            </div>
             <div class="section sectionUserBoard">
                 <h2 >user board</h2>
                 <div class="userBoard">
