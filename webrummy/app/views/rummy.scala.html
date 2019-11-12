@@ -2,7 +2,6 @@
 @import de.htwg.se.rummy.controller.component.ControllerState
 @(controller: ControllerInterface)
 
-
 @main("HTWG Rummy") {
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/rummy.css")' />
     <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/index.css")' />
@@ -26,10 +25,11 @@
             <div class="insertingNames">
                 <h1>Insert Names</h1>
                 <br/>
+
                 <form class="form-inline" action=@controllers.routes.RummyController.rummy("name Caro")>
                     <div class="form-group insertingNamesInputs">
                         <input type="text" value="" id="nameInput" class="form-control" placeholder="Name"/>
-                        <input type="submit" value="confirm" class="btn btn-light"/>
+                        <input type="submit" value="confirm" id="submitName" class="btn btn-light"/>
                     </div>
                 </form>
                 <br/>
@@ -114,3 +114,4 @@
         }
     </div>
 }
+<script src='@routes.Assets.versioned("javascripts/rummy.js")'> </script>

@@ -3,6 +3,7 @@ package controllers
 import de.htwg.se.rummy.Rummy
 import de.htwg.se.rummy.controller.ControllerInterface
 import de.htwg.se.rummy.controller.component.ControllerState
+import de.htwg.se.rummy.model.deskComp.deskBaseImpl.TileInterface
 import de.htwg.se.rummy.view.component.Tui
 import javax.inject._
 import play.api.mvc._
@@ -42,14 +43,6 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         Ok(views.html.rules())
     }
 
-
-    //  def rummy(input: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-    //    val tui = new Tui(rummyController)
-    //    val name = input.replace(":input=", "")
-    //    tui.processInput(name)
-    //    Ok(rummyAsString)
-    //  }
-
     def rummy(input: String): Action[AnyContent] = Action {
         println(input)
         var correctInput: String = input
@@ -67,6 +60,8 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         } else {
             processInput(correctInput)
         }
+//        println(Ordering(rummyController.desk.board))
+//        val set: scala.collection.SortedSet[TileInterface] = rummyController.desk.board
         Ok(views.html.rummy(rummyController))
     }
 
