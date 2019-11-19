@@ -3,115 +3,84 @@
 @(controller: ControllerInterface)
 
 @main("HTWG Rummy") {
-    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/rummy.css")' />
-    <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/index.css")' />
-    <script src='@routes.Assets.versioned("javascripts/bootstrap.min.js")'> </script>
 
     <div class="game">
-        @if(controller.controllerState == ControllerState.NEW_GAME) {
-            <div class="creatingNewGame">
-                <h1>Menu</h1>
-                <div class="creatingNewGameForms">
-                    <form action=@controllers.routes.RummyController.rummy("c")>
-                        <input type="submit" value="New Game" class="btn btn-light button"/>
-                    </form>
-                    <form action=@controllers.routes.RummyController.rummy("l")>
-                        <input type="submit" value="Load Game" class="btn btn-light button"/>
-                    </form>
-                </div>
-            </div>
-        }
-        @if(controller.controllerState == ControllerState.INSERTING_NAMES) {
-            <div class="insertingNames">
-                <h1>Insert Names</h1>
-                <br/>
 
-                <form class="form-inline" action=@controllers.routes.RummyController.rummy("name Caro")>
-                    <div class="form-group insertingNamesInputs">
-                        <input type="text" value="" id="nameInput" class="form-control" placeholder="Name"/>
-                        <input type="submit" value="confirm" id="submitName" class="btn btn-light"/>
-                    </div>
-                </form>
-                <br/>
-                <br/>
-                <div class="buttonBar">
-                    <form action=@controllers.routes.RummyController.rummy("f")>
-                        <input type="submit" value="Start game" class="btn btn-light button"/>
-                    </form>
-                    <form action=@controllers.routes.RummyController.rummy("z")>
-                        <input type="submit" value="Undo" class="btn btn-light button"/>
-                    </form>
-                    <form action=@controllers.routes.RummyController.rummy("r")>
-                        <input type="submit" value="Redo" class="btn btn-light button"/>
-                    </form>
-                </div>
-            </div>
-        }
-        @if(controller.controllerState == ControllerState.P_TURN) {
-            <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg">
-                <span class="navbar-text">
-                    RUMMY
-                </span>
-                <div class="collapse navbar-collapse buttonsNavBar" id="navbarSupportedContent">
-                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("z")>
-                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Undo"/>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("r")>
-                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Redo"/>
-                    </form>
-                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("f")>
-                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Finish"/>
-                    </form>
-                </div>
-                <a href="../rules">
-                    <button type="button" class="btn btn-outline-light my-2 my-lg-0">
-                        Rules
-                    </button>
-                </a>
-            </nav>
-            <div class="alert alert-primary playerAlert" role="alert">
-                @controller.desk.getCurrentPlayer.name, it's your turn!
-            </div>
-            <div class="section sectionUserBoard">
-                <h2 >user board</h2>
-                <div class="userBoard">
-                @for(tile <- controller.viewOfBoard) {
-                    <form action=@controllers.routes.RummyController.rummy("l " + tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString)>
-                        <input type="submit" value="@tile.value.toString"
-                        class="@tile.color.toString tile" />
-                    </form>
-                }
-                </div>
-            </div>
-            <br/>
-            <div class="section">
-                <h2>table</h2>
-                <div class="table">
-                @for(sortedSet <- controller.getTileSet) {
-                    <div class="tiles">
-                    @for(tile <- sortedSet) {
-                        <form action=@controllers.routes.RummyController.rummy("m " + tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString)>
-                            <input type="submit" value="@tile.value.toString" class="@tile.color.toString tile"/>
-                        </form>
-                    }
-                    </div>
-                }
-                </div>
-            </div>
-        }
-        @if(controller.controllerState == ControllerState.P_FINISHED) {
-            <div class="creatingNewGame">
-                <h3>Turn finished</h3>
-                <br/>
-                <form action=@controllers.routes.RummyController.rummy("n")>
-                    <input class="btn btn-light button" type="submit" value="Next player"/>
-                </form>
-                <br/>
-                <form action=@controllers.routes.RummyController.rummy("s")>
-                    <input class="btn btn-light button" type="submit" value="Store Game"/>
-                </form>
-            </div>
-        }
+        <div id="firstSection">
+
+        </div>
+
+        <div id="secondSection">
+
+        </div>
+
+
+@*
+@*        @if(controller.controllerState == ControllerState.P_TURN) {*@
+@*            <nav class="navbar fixed-top navbar-dark bg-dark navbar-expand-lg">*@
+@*                <span class="navbar-text">*@
+@*                    RUMMY*@
+@*                </span>*@
+@*                <div class="collapse navbar-collapse buttonsNavBar" id="navbarSupportedContent">*@
+@*                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("z")>*@
+@*                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Undo"/>*@
+@*                    </form>*@
+@*                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("r")>*@
+@*                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Redo"/>*@
+@*                    </form>*@
+@*                    <form class="form-inline my-2 my-lg-0" action=@controllers.routes.RummyController.rummy("f")>*@
+@*                        <input class="btn btn-outline-light my-2 my-lg-0" type="submit" value="Finish"/>*@
+@*                    </form>*@
+@*                </div>*@
+@*                <a href="../rules">*@
+@*                    <button type="button" class="btn btn-outline-light my-2 my-lg-0">*@
+@*                        Rules*@
+@*                    </button>*@
+@*                </a>*@
+@*            </nav>*@
+@*            <div class="alert alert-primary playerAlert" role="alert">*@
+@*                <p id="playerName">ggghh</p>*@
+@*                , it's your turn!*@
+@*            </div>*@
+@*            <div class="section sectionUserBoard">*@
+@*                <h2 >user board</h2>*@
+@*                <div class="userBoard">*@
+@*                @for(tile <- controller.viewOfBoard) {*@
+@*                    <form action=@controllers.routes.RummyController.rummy("l " + tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString)>*@
+@*                        <input type="submit" value="@tile.value.toString"*@
+@*                        class="@tile.color.toString tile" />*@
+@*                    </form>*@
+@*                }*@
+@*                </div>*@
+@*            </div>*@
+@*            <br/>*@
+@*            <div class="section">*@
+@*                <h2>table</h2>*@
+@*                <div class="table">*@
+@*                @for(sortedSet <- controller.getTileSet) {*@
+@*                    <div class="tiles">*@
+@*                    @for(tile <- sortedSet) {*@
+@*                        <form action=@controllers.routes.RummyController.rummy("m " + tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString)>*@
+@*                            <input type="submit" value="@tile.value.toString" class="@tile.color.toString tile"/>*@
+@*                        </form>*@
+@*                    }*@
+@*                    </div>*@
+@*                }*@
+@*                </div>*@
+@*            </div>*@
+@*        }*@
+@*        @if(controller.controllerState == ControllerState.P_FINISHED) {*@
+@*            <div class="creatingNewGame">*@
+@*                <h3>Turn finished</h3>*@
+@*                <br/>*@
+@*                <form action=@controllers.routes.RummyController.rummy("n")>*@
+@*                    <input class="btn btn-light button" type="submit" id="nextPlayerButton" value="Next player"/>*@
+@*                </form>*@
+@*                <br/>*@
+@*                <form action=@controllers.routes.RummyController.rummy("s")>*@
+@*                    <input class="btn btn-light button" type="submit" value="Store Game"/>*@
+@*                </form>*@
+@*            </div>*@
+@*        }*@
     </div>
 }
-<script src='@routes.Assets.versioned("javascripts/rummy.js")'> </script>

@@ -45,8 +45,10 @@
 
 .section {
     border-style: solid;
-    border-color: darksalmon;
-    background: #fadab6;
+    border-color: #d97397;
+    /*border-color: darksalmon;*/
+    /*background: #fadab6;*/
+    background: #d2dff7;
     border-radius: 10px;
     text-align: center;
 }
@@ -100,7 +102,8 @@
     cursor: pointer;
     background: #fcf2e6;
     width: 50px;
-    box-shadow: inset 0 0 5px 5px #f2cea2;
+    box-shadow: inset 0 0 5px 5px #d97397;
+    /*box-shadow: inset 0 0 5px 5px #f2cea2;*/
 }
 
 .BLUE {

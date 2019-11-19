@@ -31,8 +31,15 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         rummyAsString = rummyController.currentStateAsString()
     })
 
-    def index(): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
-        Ok(views.html.index())
+    def state():  Action[AnyContent] = Action {
+        var stateString: String = ""
+        rummyController.controllerState match {
+            case ControllerState.NEW_GAME => stateString = "NEW_GAME"
+            case ControllerState.INSERTING_NAMES => stateString = "INSERTING_NAMES"
+            case ControllerState.P_TURN => stateString = "P_TURN"
+            case ControllerState.P_FINISHED => stateString = "P_FINISHED"
+        }
+        Ok(stateString)
     }
 
     def newGame(): Action[AnyContent] = Action{
@@ -43,7 +50,18 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         Ok(views.html.rules())
     }
 
+    def nameInput(name: String) = {
+        val correctInput: String = "name " + name
+        println("testPost Called " + correctInput);
+        this.rummy(correctInput)
+    }
+
+    def getCurrentPlayerName(): Action[AnyContent] = Action {
+        Ok(rummyController.currentP.name)
+    }
+
     def rummy(input: String): Action[AnyContent] = Action {
+        println("in rummy()")
         println(input)
         var correctInput: String = input
         if(input.startsWith(":input=")) {
@@ -69,6 +87,7 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         if (input.equals("q")) {
             System.exit(0)
         }
+        println(rummyController.controllerState)
         rummyController.controllerState match {
             case ControllerState.NEW_GAME => handleNewGameInput(input)
             case ControllerState.INSERTING_NAMES => handleNameInput(input)

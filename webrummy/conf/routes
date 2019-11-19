@@ -4,11 +4,14 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET        /                    controllers.RummyController.index
-GET        /rummy/:input         controllers.RummyController.rummy(input)
-GET        /rummy               controllers.RummyController.newGame()
-GET        /rules               controllers.RummyController.rules
+GET        /state                controllers.RummyController.state
 
+GET        /                     controllers.RummyController.newGame()
+GET        /rummy/:input         controllers.RummyController.rummy(input)
+GET        /rummy                controllers.RummyController.newGame()
+GET        /rules                controllers.RummyController.rules
+GET        /setName/:name        controllers.RummyController.nameInput(name)
+GET        /getCurrentPlayerName controllers.RummyController.getCurrentPlayerName()
 
 # Map static resources from the /public folder to the /assets URL path
 GET        /assets/*file        controllers.Assets.versioned(path="/public", file: Asset)
