@@ -5,7 +5,7 @@
 
 # An example controller showing a sample home page
 GET         /state                  controllers.RummyController.state
-GET         /getTileSet             controllers.RummyController.getTileSet
+GET         /getDesk             controllers.RummyController.getDesk
 GET         /getViewOfBoard         controllers.RummyController.getViewOfBoard
 
 GET         /                       controllers.RummyController.newGame()

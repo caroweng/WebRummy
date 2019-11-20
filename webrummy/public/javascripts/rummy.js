@@ -1,11 +1,21 @@
 // document.getElementById("nextPlayerButton").addEventListener("click", getCurrentPlayerName);
 
+let game = {
+    desk: {
+        sets: [],
+        players: []
+    }
+};
+
 function init() {
     $.ajax({
         method: "GET",
         url: "/state",
         dataType: "text",
-        success: state => switchView(state),
+        success: state => {
+            console.log(state);
+            switchView(state)
+        },
         error: (error) => {
             console.log(error)
         }
@@ -45,21 +55,6 @@ function sendName(name) {
 
         }
     });
-}
-
-
-function getCurrentPlayerName() {
-    console.log(" get current");
-    $.ajax({
-        method: "GET",
-        url: "/getCurrentPlayerName",
-        dataType: "json",
-
-        success: function (result) {
-            return result;
-        }
-    });
-
 }
 
 function startMenu() {
@@ -111,11 +106,10 @@ function callRummyController(param) {
         method: "GET",
         url: "/rummy/" + param,
         success: () => {
-            console.log("Success")
+            getDesk()
         },
         error: function (error) {
             console.log("error " + error);
-
         }
     });
     init()
@@ -198,19 +192,21 @@ function setEventsForUndoRedo() {
 }
 
 function playerTurn() {
-    let playerTurnSection = $("#firstSection").empty();
-    playerTurnSection.append(getNavbar());
+    let alertSection = $("#alertSection").empty();
+    let userBoardSection = $("#firstSection").empty();
+    let tableSection = $("#secondSection").empty();
+    $("#navbar").append(getNavbar());
+    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN")
     let infoAlert = $("<div/>", {
         class: "alert alert-primary playerAlert",
         role: "alert",
-        text: getCurrentPlayerName() + ", it's your turn!"
+        text: currentPlayer.name + ", it's your turn!"
     });
 
-    playerTurnSection
-        .append(infoAlert)
-        .append(getUserBoard())
-        .append($("<br/>"))
-        .append(getTable());
+    alertSection.append(infoAlert);
+    userBoardSection.append(getUserBoard());
+        // .append($("<br/>"))
+    tableSection.append(getTable());
 }
 
 function getNavbar() {
@@ -228,7 +224,7 @@ function getNavbar() {
         .append($("<input/>", {
        class: "btn btn-outline-light my-2 my-lg-0",
        type: "submit",
-       text: "Finish"
+       value: "Finish"
     }));
 
     let rulesLink = $("<a/>", {
@@ -258,27 +254,36 @@ function getUserBoard() {
     let header = $("<h2/>", {
        text: "user board"
     });
-    userBoardSection.append(header)
+    userBoardSection.append(header);
 
     let userBoard = $("<div/>", {
         class: "userBoard"
     });
 
-    let viewOfBoard = getViewOfBoard();
+    let viewOfBoard = getUserBoardTiles();
 
     for(let tile of viewOfBoard) {
-        let id = tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString;
-
+        let id = tile.value.toString() + tile.color.toString().charAt(0).toString() + tile.ident.toString();
+        console.log(id)
         userBoard.append($("<input/>", {
             type: "submit",
             value: tile.value.toString(),
             class: tile.color.toString() + " tile",
-            id: id
+            id: id,
+            click: () => {
+                callRummyController("l " + id)
+                // $.ajax({
+                //     method: "GET",
+                //     url: "/game/player/laydown/" + tileId,
+                //     dataType: "json",
+                //     success: result => update(result)
+                // })
+            }
         }));
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById(id).addEventListener("click", () => callRummyController("l " + id));
-        });
+        // document.addEventListener("DOMContentLoaded", () => {
+        // });
+        //     document.getElementById(id).addEventListener("click", () => callRummyController("l " + id));
     }
     userBoardSection.append(userBoard);
     return userBoardSection;
@@ -297,26 +302,35 @@ function getTable() {
         class: "table"
     });
 
-    let tileSet = getTileSet();
+    let tileSet = getTableSets();
 
     for(let sortedSet of tileSet) {
         let tilesSection = $("<div/>", {
             class: "tiles"
         });
 
-        for(let tile of sortedSet) {
-            let id = tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString;
-            let tile = $("<input/>", {
+        for(let tile of sortedSet.struct) {
+            let id = tile.value.toString() + tile.color.toString().charAt(0) + tile.ident.toString();
+            let tileComponent = $("<input/>", {
                 type: "submit",
                 value: tile.value.toString(),
                 class: tile.color.toString() + " tile",
-                id: id
+                id: id,
+                click: () => {
+                    callRummyController("m " + id)
+                    // $.ajax({
+                    //     method: "GET",
+                    //     url: "/game/player/laydown/" + tileId,
+                    //     dataType: "json",
+                    //     success: result => update(result)
+                    // })
+                }
             });
-            tilesSection.append(tile);
+            tilesSection.append(tileComponent);
 
-            document.addEventListener("DOMContentLoaded", () => {
-                document.getElementById(id).addEventListener("click", () => callRummyController("m " + id));
-            });
+            // document.addEventListener("DOMContentLoaded", () => {
+            //     document.getElementById(id).addEventListener("click", () => callRummyController("m " + id));
+            // });
         }
 
         table.append(tilesSection);
@@ -325,35 +339,35 @@ function getTable() {
     return tableSection;
 }
 
-function getTileSet() {
+function getDesk() {
     $.ajax({
         method: "GET",
-        url: "/getTileSet",
+        url: "/getDesk",
         dataType: "json",
         success: (result) => {
-            return result;
+            reload(result);
         },
-        error: () => {
+        error: () => (error) => {
             console.log("error " + error);
         }
     });
 }
 
-function getViewOfBoard() {
-    $.ajax({
-        method: "GET",
-        url: "/getViewOfBoard",
-        dataType: "json",
-        success: (result) => {
-            return result;
-        },
-        error: () => {
-            console.log("error " + error);
-        }
-    });
+function getUserBoardTiles() {
+    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN");
+    return currentPlayer.board;
+}
+
+function getTableSets() {
+    return game.desk.sets;
+}
+
+function reload(result) {
+    game = result;
+    init()
 }
 
 $(document).ready(function () {
     console.log("Document is ready!");
-    init()
+    getDesk();
 });
