@@ -32,6 +32,19 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
     })
 
     def state():  Action[AnyContent] = Action {
+        rummyController.storeFile()
+        rummyController.loadFile()
+//        Ok(stateString)
+    }
+
+    def getTileSet():  Action[AnyContent] = Action {
+        var stateString: String = ""
+        rummyController.controllerState match {
+        }
+        Ok(stateString)
+    }
+
+    def getViewOfBoard():  Action[AnyContent] = Action {
         var stateString: String = ""
         rummyController.controllerState match {
             case ControllerState.NEW_GAME => stateString = "NEW_GAME"

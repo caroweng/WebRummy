@@ -1,6 +1,4 @@
-// document.getElementById("startGame").addEventListener("click", getCurrentPlayerName);
 // document.getElementById("nextPlayerButton").addEventListener("click", getCurrentPlayerName);
-// document.getElementById("submitName").addEventListener("click", setNames);
 
 function init() {
     $.ajax({
@@ -52,18 +50,15 @@ function sendName(name) {
 
 function getCurrentPlayerName() {
     console.log(" get current");
-    // $.ajax({
-    //     method: "GET",
-    //     url: "/getCurrentPlayerName",
-    //     dataType: "json",
-    //
-    //     success: function (result) {
-    //         document.getElementById("playerName").innerText = result;
-    //     }
-    // });
-    // console.log(" get current")
-    document.getElementById("playerNam").innerHTML = "hallo";
-    // document.getElementById("playerName").innerHTML = "hallo";
+    $.ajax({
+        method: "GET",
+        url: "/getCurrentPlayerName",
+        dataType: "json",
+
+        success: function (result) {
+            return result;
+        }
+    });
 
 }
 
@@ -203,7 +198,159 @@ function setEventsForUndoRedo() {
 }
 
 function playerTurn() {
+    let playerTurnSection = $("#firstSection").empty();
+    playerTurnSection.append(getNavbar());
+    let infoAlert = $("<div/>", {
+        class: "alert alert-primary playerAlert",
+        role: "alert",
+        text: getCurrentPlayerName() + ", it's your turn!"
+    });
 
+    playerTurnSection
+        .append(infoAlert)
+        .append(getUserBoard())
+        .append($("<br/>"))
+        .append(getTable());
+}
+
+function getNavbar() {
+    let navbar = $("<nav/>", {
+        class: "navbar fixed-top navbar-dark bg-dark navbar-expand-lg"
+    });
+
+    let navbarButtons = $("<div/>", {
+        class: "collapse navbar-collapse buttonsNavBar",
+        id: "navbarSupportedContent"
+    });
+
+    navbarButtons
+        .append(undoRedoButtons())
+        .append($("<input/>", {
+       class: "btn btn-outline-light my-2 my-lg-0",
+       type: "submit",
+       text: "Finish"
+    }));
+
+    let rulesLink = $("<a/>", {
+        href: "../rules",
+    });
+
+    rulesLink.append($("<button/>", {
+        type: "button",
+        class: "btn btn-outline-light my-2 my-lg-0",
+        text: "Rules"
+    }));
+
+    navbar
+        .append($("<span/>", {
+            class: "navbar-text",
+            text: "RUMMY"
+        }))
+        .append(navbarButtons)
+        .append(rulesLink);
+    return navbar;
+}
+
+function getUserBoard() {
+    let userBoardSection = $("<div/>", {
+        class: "section sectionUserBoard"
+    });
+    let header = $("<h2/>", {
+       text: "user board"
+    });
+    userBoardSection.append(header)
+
+    let userBoard = $("<div/>", {
+        class: "userBoard"
+    });
+
+    let viewOfBoard = getViewOfBoard();
+
+    for(let tile of viewOfBoard) {
+        let id = tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString;
+
+        userBoard.append($("<input/>", {
+            type: "submit",
+            value: tile.value.toString(),
+            class: tile.color.toString() + " tile",
+            id: id
+        }));
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById(id).addEventListener("click", () => callRummyController("l " + id));
+        });
+    }
+    userBoardSection.append(userBoard);
+    return userBoardSection;
+}
+
+function getTable() {
+    let tableSection = $("<div/>", {
+        class: "section"
+    });
+    let header = $("<h2/>", {
+        text: "table"
+    });
+    tableSection.append(header);
+
+    let table = $("<div/>", {
+        class: "table"
+    });
+
+    let tileSet = getTileSet();
+
+    for(let sortedSet of tileSet) {
+        let tilesSection = $("<div/>", {
+            class: "tiles"
+        });
+
+        for(let tile of sortedSet) {
+            let id = tile.value.toString + tile.color.toString.charAt(0).toString + tile.ident.toString;
+            let tile = $("<input/>", {
+                type: "submit",
+                value: tile.value.toString(),
+                class: tile.color.toString() + " tile",
+                id: id
+            });
+            tilesSection.append(tile);
+
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById(id).addEventListener("click", () => callRummyController("m " + id));
+            });
+        }
+
+        table.append(tilesSection);
+    }
+    tableSection.append(table);
+    return tableSection;
+}
+
+function getTileSet() {
+    $.ajax({
+        method: "GET",
+        url: "/getTileSet",
+        dataType: "json",
+        success: (result) => {
+            return result;
+        },
+        error: () => {
+            console.log("error " + error);
+        }
+    });
+}
+
+function getViewOfBoard() {
+    $.ajax({
+        method: "GET",
+        url: "/getViewOfBoard",
+        dataType: "json",
+        success: (result) => {
+            return result;
+        },
+        error: () => {
+            console.log("error " + error);
+        }
+    });
 }
 
 $(document).ready(function () {
