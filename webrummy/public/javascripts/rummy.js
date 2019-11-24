@@ -1,5 +1,3 @@
-// document.getElementById("nextPlayerButton").addEventListener("click", getCurrentPlayerName);
-
 let game = {
     desk: {
         sets: [],
@@ -28,13 +26,19 @@ function switchView(state) {
             startMenu();
             break;
         case "INSERTING_NAMES":
+            alreadyAddedPlayers();
             insertingNames();
             break;
         case "P_TURN":
             playerTurn();
             break;
         case "P_FINISHED":
+            onFinished();
     }
+}
+
+function clearAlerts() {
+    $("#alertSection").empty();
 }
 
 function setNames() {
@@ -49,6 +53,7 @@ function sendName(name) {
         url: "/setName/" + name,
         success: () => {
             console.log("Successfully sent name!");
+            getDeskFromServer();
         },
         error: function (error) {
             console.log(error);
@@ -70,14 +75,20 @@ function startMenu() {
         type: "submit",
         id: "newGame",
         value: "New Game",
-        class: "btn btn-light button"
+        class: "btn btn-light button",
+        click: () => {
+            callRummyController("c")
+        }
     }));
 
     menuSection.append($('<input/>', {
         type: "submit",
         id: "loadGame",
         value: "Load Game",
-        class: "btn btn-light button"
+        class: "btn btn-light button",
+        click: () => {
+            callRummyController("l")
+        }
     }));
 
 
@@ -93,20 +104,18 @@ function startMenu() {
 
     menuSection.append(rulesButton);
 
-    $("#firstSection").attr("class", "welcome")
+    $("#firstSection").empty().attr("class", "section")
         .append(header)
         .append(menuSection);
-
-    document.getElementById("newGame").addEventListener("click", () => callRummyController("c"));
-    document.getElementById("loadGame").addEventListener("click", getCurrentPlayerName);
 }
 
 function callRummyController(param) {
+    console.log("rummyController");
     $.ajax({
         method: "GET",
         url: "/rummy/" + param,
         success: () => {
-            getDesk()
+            getDeskFromServer()
         },
         error: function (error) {
             console.log("error " + error);
@@ -121,44 +130,72 @@ function insertingNames() {
     });
 
     let nameInputButtons = $("<div/>", {
-        class: "insertingNamesInput",
+        class: "insertingNamesInputs",
     });
 
     let nameInput = $("<input/>", {
         type: "text",
         id: "nameInput",
-        placeholder: "Name"
+        placeholder: "Name",
+        class: "form-control"
     });
 
     let nameSubmit = $("<input/>", {
         type: "submit",
         id: "submitName",
         value: "confirm",
-        class: "btn btn-light"
+        class: "btn btn-light",
+        click: () => {
+            setNames();
+        }
     });
 
     nameInputButtons
         .append(nameInput)
         .append(nameSubmit);
 
-
     let startGame = $("<input/>", {
         type: "submit",
         id: "startGame",
         value: "Start Game",
-        class: "btn btn-light button"
+        class: "btn btn-light button",
+        click: () => {
+            if(game.desk.players.length < 2) {
+                $(displayAlert("Not enough players!"))
+            } else {
+                callRummyController("f")
+            }
+        }
     });
-
-    $("#firstSection").empty().attr("class", "insertingNames")
+    $("#firstSection").empty().attr("class", "insertingNames section")
         .append(header)
         .append("<br/>")
         .append(nameInputButtons)
         .append("<br/><br/>")
         .append(undoRedoButtons().append(startGame));
+}
 
-    document.getElementById("submitName").addEventListener("click", setNames);
-    document.getElementById("startGame").addEventListener("click", () => callRummyController("f"));
-    setEventsForUndoRedo();
+function displayAlert(msg) {
+    let alert = $("<div/>", {
+        class: "alert alert-warning",
+        role: "alert",
+        text: msg
+    });
+    $("#alertSection").empty().append(alert)
+}
+
+function alreadyAddedPlayers() {
+    let players = $("<div/>");
+    let playerCount = 0;
+    for(let player of game.desk.players) {
+        playerCount++;
+        players.append($("<p/>", {
+            text: "Player" + playerCount + ": " + player.name,
+            class: "alreadyAddedPlayers"
+        }));
+    }
+
+    $("#secondSection").empty().append(players)
 }
 
 function undoRedoButtons() {
@@ -170,14 +207,20 @@ function undoRedoButtons() {
         type: "submit",
         id: "undo",
         value: "Undo",
-        class: "btn btn-light button"
+        class: "btn btn-light button",
+        click: () => {
+            callRummyController("z")
+        }
     });
 
     let redoButton = $("<input/>", {
         type: "submit",
         id: "redo",
         value: "Redo",
-        class: "btn btn-light button"
+        class: "btn btn-light button",
+        click: () => {
+            callRummyController("r")
+        }
     });
 
     buttonBar
@@ -186,17 +229,12 @@ function undoRedoButtons() {
     return buttonBar;
 }
 
-function setEventsForUndoRedo() {
-    document.getElementById("undo").addEventListener("click", () => callRummyController("z"));
-    document.getElementById("redo").addEventListener("click", () => callRummyController("r"));
-}
-
 function playerTurn() {
     let alertSection = $("#alertSection").empty();
-    let userBoardSection = $("#firstSection").empty();
-    let tableSection = $("#secondSection").empty();
+    getUserBoard();
+    let tableSection = $("#secondSection").empty().attr("class","tableAndBoard");
     $("#navbar").append(getNavbar());
-    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN")
+    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN");
     let infoAlert = $("<div/>", {
         class: "alert alert-primary playerAlert",
         role: "alert",
@@ -204,8 +242,6 @@ function playerTurn() {
     });
 
     alertSection.append(infoAlert);
-    userBoardSection.append(getUserBoard());
-        // .append($("<br/>"))
     tableSection.append(getTable());
 }
 
@@ -219,13 +255,39 @@ function getNavbar() {
         id: "navbarSupportedContent"
     });
 
+    let undoButton = $("<input/>", {
+        type: "submit",
+        id: "undo",
+        value: "Undo",
+        class: "btn btn-outline-light my-2 my-lg-0",
+        click: () => {
+            callRummyController("z")
+        }
+    });
+
+    let redoButton = $("<input/>", {
+        type: "submit",
+        id: "redo",
+        value: "Redo",
+        class: "btn btn-outline-light my-2 my-lg-0",
+        click: () => {
+            callRummyController("r")
+        }
+    });
+
+    let finishButton = $("<input/>", {
+        class: "btn btn-outline-light my-2 my-lg-0",
+        type: "submit",
+        value: "Finish",
+        click: () => {
+            callRummyController("f")
+        }
+    });
+
     navbarButtons
-        .append(undoRedoButtons())
-        .append($("<input/>", {
-       class: "btn btn-outline-light my-2 my-lg-0",
-       type: "submit",
-       value: "Finish"
-    }));
+        .append(undoButton)
+        .append(redoButton)
+        .append(finishButton);
 
     let rulesLink = $("<a/>", {
         href: "../rules",
@@ -248,9 +310,7 @@ function getNavbar() {
 }
 
 function getUserBoard() {
-    let userBoardSection = $("<div/>", {
-        class: "section sectionUserBoard"
-    });
+    let userBoardSection = $("#firstSection").empty().attr("class", "section sectionUserBoard tableAndBoard");
     let header = $("<h2/>", {
        text: "user board"
     });
@@ -264,7 +324,6 @@ function getUserBoard() {
 
     for(let tile of viewOfBoard) {
         let id = tile.value.toString() + tile.color.toString().charAt(0).toString() + tile.ident.toString();
-        console.log(id)
         userBoard.append($("<input/>", {
             type: "submit",
             value: tile.value.toString(),
@@ -272,21 +331,22 @@ function getUserBoard() {
             id: id,
             click: () => {
                 callRummyController("l " + id)
-                // $.ajax({
-                //     method: "GET",
-                //     url: "/game/player/laydown/" + tileId,
-                //     dataType: "json",
-                //     success: result => update(result)
-                // })
             }
         }));
-
-        // document.addEventListener("DOMContentLoaded", () => {
-        // });
-        //     document.getElementById(id).addEventListener("click", () => callRummyController("l " + id));
     }
     userBoardSection.append(userBoard);
     return userBoardSection;
+}
+
+function getUserBoardTiles() {
+    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN");
+    return currentPlayer.board.sort(compareTiles);
+}
+
+function compareTiles(a, b) {
+    if(a.value > b.value) return 1;
+    if(a.value < b.value) return -1;
+    return 0;
 }
 
 function getTable() {
@@ -308,8 +368,10 @@ function getTable() {
         let tilesSection = $("<div/>", {
             class: "tiles"
         });
+        
+        sortedSet = sortedSet.struct.sort(compareTiles);
 
-        for(let tile of sortedSet.struct) {
+        for(let tile of sortedSet) {
             let id = tile.value.toString() + tile.color.toString().charAt(0) + tile.ident.toString();
             let tileComponent = $("<input/>", {
                 type: "submit",
@@ -318,28 +380,58 @@ function getTable() {
                 id: id,
                 click: () => {
                     callRummyController("m " + id)
-                    // $.ajax({
-                    //     method: "GET",
-                    //     url: "/game/player/laydown/" + tileId,
-                    //     dataType: "json",
-                    //     success: result => update(result)
-                    // })
                 }
             });
             tilesSection.append(tileComponent);
-
-            // document.addEventListener("DOMContentLoaded", () => {
-            //     document.getElementById(id).addEventListener("click", () => callRummyController("m " + id));
-            // });
         }
-
         table.append(tilesSection);
     }
     tableSection.append(table);
     return tableSection;
 }
 
-function getDesk() {
+function getTableSets() {
+    return game.desk.sets;
+}
+
+function onFinished() {
+    let header = $("<h3/>", {
+        text: "Turn finished"
+    });
+
+    let nextPlayerButton = $("<input/>", {
+        type: "submit",
+        value: "Next player",
+        class: "btn btn-light button",
+        id: "nextPlayerButton",
+        click: () => {
+            callRummyController("n")
+        }
+    });
+
+    $("#alertSection").empty();
+    let storeGameButton = $("<input/>", {
+        type: "submit",
+        value: "Store game",
+        class: "btn btn-light button",
+        id: "storeGame",
+        click: () => {
+            callRummyController("s");
+            displayAlert("Game stored!")
+        }
+    });
+    $("#navbar").empty();
+    $("#secondSection").empty();
+    $("#firstSection")
+        .empty()
+        .append(header)
+        .append($("<br/>"))
+        .append(nextPlayerButton)
+        .append(storeGameButton);
+}
+
+function getDeskFromServer() {
+    console.log("getDesktFromServer")
     $.ajax({
         method: "GET",
         url: "/getDesk",
@@ -353,15 +445,6 @@ function getDesk() {
     });
 }
 
-function getUserBoardTiles() {
-    let currentPlayer = game.desk.players.find(player => player.state.toString() === "TURN");
-    return currentPlayer.board;
-}
-
-function getTableSets() {
-    return game.desk.sets;
-}
-
 function reload(result) {
     game = result;
     init()
@@ -369,5 +452,5 @@ function reload(result) {
 
 $(document).ready(function () {
     console.log("Document is ready!");
-    getDesk();
+    getDeskFromServer();
 });
