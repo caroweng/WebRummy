@@ -1,7 +1,6 @@
 .rules{
     font-family: "Lucida Grande", Helvetica, sans-serif;
     width: 70%;
-    /*width: 800px;*/
     margin: auto;
     margin-bottom: 20px;
     margin-top: 20px;
@@ -16,9 +15,9 @@ h3 {
     color: brown;
 }
 
-.box{
+.rulesSection{
     border-style: solid;
-    border-color: darksalmon;
+    border-color: #d97397;
     margin: 5px;
     border-radius: 10px;
     padding: 10px;

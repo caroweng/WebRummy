@@ -1,65 +1,32 @@
 .game {
-    /*width: 915px;*/
     width: 65%;
     margin: auto;
     margin-bottom: 20px;
     margin-top: 20px;
 }
 
-.creatingNewGame {
-    font-family: "Lucida Grande", Helvetica, sans-serif;
-    text-align: center;
+.section {
     border-style: solid;
-    border-color: darksalmon;
+    border-color: #d97397;
     border-radius: 10px;
+    text-align: center;
+    font-family: "Lucida Grande", Helvetica, sans-serif;
     padding: 20px;
-    /*width: 915px;*/
-    /*width: 70%;*/
     margin: auto;
+    margin-bottom: 10px;
 }
 
-.creatingNewGameForms > form {
-    margin: 10px;
-    text-align: center;
-    display: inline-block;
+.tableAndBoard {
+    background: #d2dff7;
+}
+
+.insertingNamesInputs {
+    display: inline-flex;
+    flex-direction: row;
 }
 
 .insertingNamesInputs > input {
     margin: 3px;
-}
-
-.insertingNames {
-    font-family: "Lucida Grande", Helvetica, sans-serif;
-    text-align: center;
-    border-style: solid;
-    border-color: darksalmon;
-    border-radius: 10px;
-    padding: 20px;
-    /*width: 915px;*/
-    margin: auto;
-}
-
-.insertingNames > form {
-    display: inline-block;
-}
-
-.section {
-    border-style: solid;
-    border-color: #d97397;
-    /*border-color: darksalmon;*/
-    /*background: #fadab6;*/
-    background: #d2dff7;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.userBoard {
-    margin: 10px;
-}
-
-.userBoard > form {
-    margin: 10px;
-    display: inline;
 }
 
 .sectionUserBoard {
@@ -72,21 +39,8 @@
     margin: 10px;
 }
 
-.tiles > form {
-    margin: 3px;
-}
-
-.table {
-    margin: 10px;
-}
-
 .buttonBar {
     margin: auto;
-}
-
-.buttonBar > form {
-    margin: 10px;
-    display: inline-block;
 }
 
 .tile {
@@ -103,7 +57,6 @@
     background: #fcf2e6;
     width: 50px;
     box-shadow: inset 0 0 5px 5px #d97397;
-    /*box-shadow: inset 0 0 5px 5px #f2cea2;*/
 }
 
 .BLUE {
@@ -131,10 +84,23 @@ h2 {
     margin-left: 10px;
 }
 
-.buttonsNavBar > form {
-    margin: 5px;
-}
-
 .playerAlert {
     margin-top: 80px;
+    background-color: #d2dff7;
+    border-color: #d2dff7;
+}
+
+a {
+    color: black;
+}
+
+.button {
+    background-color: #d97397;
+    color: white;
+    margin-left: 5px;
+}
+
+.alreadyAddedPlayers {
+    font-family: "Lucida Grande", Helvetica, sans-serif;
+
 }
