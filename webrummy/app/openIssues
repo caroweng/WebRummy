@@ -6,3 +6,5 @@
 10. alerts zb game stored
 12. store game alert nur ganz kurz angezeigt bis neu geladen, clearAlerts geht nicht
     weil wenn Finish click erst nochman P_TURN und dann erst FINISH -> macht turnAlert neu rein
+13. man kann auf table nicht immer alle Steine bewegen -> gleiches Problem wie bei 1. ???
+14. undo braucht ewig bis Stein wieder oben ist

@@ -5,6 +5,31 @@ let game = {
     }
 };
 
+let socket = new WebSocket("ws://localhost:9000/socket");
+initWebSocket();
+
+function initWebSocket() {
+    socket.onopen = function(){
+        console.log("WebSocket connection opened.");
+    }
+
+    socket.onmessage = function(message) {
+        if (typeof message.data === "string") {
+            let json = JSON.parse(message.data);
+            reload(json);
+        }
+    }
+
+    socket.onerror = function() {
+        console.log("WebSocket connection failed.");
+    }
+
+    socket.onclose = function() {
+        console.log("WebSocket connection closed.");
+    }
+}
+
+
 function init() {
     $.ajax({
         method: "GET",
@@ -48,18 +73,21 @@ function setNames() {
 }
 
 function sendName(name) {
-    $.ajax({
-        method: "GET",
-        url: "/setName/" + name,
-        success: () => {
-            console.log("Successfully sent name!");
-            getDeskFromServer();
-        },
-        error: function (error) {
-            console.log(error);
+    socket.send(JSON.stringify({action: "addNameOfPlayer", name: name}));
 
-        }
-    });
+
+    // $.ajax({
+    //     method: "GET",
+    //     url: "/setName/" + name,
+    //     success: () => {
+    //         console.log("Successfully sent name!");
+    //         getDeskFromServer();
+    //     },
+    //     error: function (error) {
+    //         console.log(error);
+    //
+    //     }
+    // });
 }
 
 function startMenu() {
@@ -111,17 +139,21 @@ function startMenu() {
 
 function callRummyController(param) {
     console.log("rummyController");
-    $.ajax({
-        method: "GET",
-        url: "/rummy/" + param,
-        success: () => {
-            getDeskFromServer()
-        },
-        error: function (error) {
-            console.log("error " + error);
-        }
-    });
-    init()
+
+    socket.send(JSON.stringify({action: "callRummyController", param: param}));
+
+
+    // $.ajax({
+    //     method: "GET",
+    //     url: "/rummy/" + param,
+    //     success: () => {
+    //         getDeskFromServer()
+    //     },
+    //     error: function (error) {
+    //         console.log("error " + error);
+    //     }
+    // });
+    // init()
 }
 
 function insertingNames() {
@@ -368,7 +400,7 @@ function getTable() {
         let tilesSection = $("<div/>", {
             class: "tiles"
         });
-        
+
         sortedSet = sortedSet.struct.sort(compareTiles);
 
         for(let tile of sortedSet) {
@@ -452,5 +484,6 @@ function reload(result) {
 
 $(document).ready(function () {
     console.log("Document is ready!");
+    initWebSocket()
     getDeskFromServer();
-});
+})

@@ -1,14 +1,21 @@
 package controllers
 
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.stream.Materializer
 import de.htwg.se.rummy.Rummy
 import de.htwg.se.rummy.controller.ControllerInterface
 import de.htwg.se.rummy.controller.component.ControllerState
 import de.htwg.se.rummy.model.deskComp.deskBaseImpl.TileInterface
 import de.htwg.se.rummy.view.component.Tui
 import javax.inject._
-import play.api.mvc._
+import play.api.libs.json
+import play.api.libs.json.Json
+import play.api.libs.streams.ActorFlow
+import play.api.mvc.{Action, _}
 
+import scala.swing.Reactor
 import scala.util.matching.Regex
+import scala.xml.Null
 
 
 /**
@@ -16,7 +23,7 @@ import scala.util.matching.Regex
  * application's home page.
  */
 @Singleton
-class RummyController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class RummyController @Inject()(cc: ControllerComponents) (implicit system: ActorSystem, mat: Materializer)extends AbstractController(cc) {
     val elements = 12
     val PlayerNamePattern: Regex = "name [A-Za-z]+".r
     val LayDownTilePattern: Regex = "(l [1-9][RBGY][01]|l 1[0123][RBGY][01])".r
@@ -26,6 +33,9 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
     val rummyController: ControllerInterface = Rummy.controller
     var rummyAsString: String = ""
     var selectedToMove: String = ""
+
+
+
 
     rummyController.add(() => {
         rummyAsString = rummyController.currentStateAsString()
@@ -76,13 +86,11 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         Ok(rummyController.currentP.name)
     }
 
-    def rummy(input: String): Action[AnyContent] = Action {
+//    def rummy(input: String): Action[AnyContent] = Action {
+    def rummy(input: String): Unit =  {
         println("in rummy()")
         println(input)
         var correctInput: String = input
-        if(input.startsWith(":input=")) {
-             correctInput = input.replace(":input=", "")
-        }
         if (correctInput.matches(MoveMPatternString)) {
             if (selectedToMove.equals("")) {
                 selectedToMove = correctInput
@@ -96,7 +104,7 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
         }
 //        println(Ordering(rummyController.desk.board))
 //        val set: scala.collection.SortedSet[TileInterface] = rummyController.desk.board
-        Ok(views.html.rummy(rummyController))
+//        Ok(views.html.rummy(rummyController))
     }
 
     def processInput(input: String): Unit = {
@@ -149,6 +157,62 @@ class RummyController @Inject()(cc: ControllerComponents) extends AbstractContro
 
     private def wrongInput() {
         rummyAsString = "Could not identify your input. Are you sure it was correct'?"
+    }
+
+    def processSocketInput(msg: String): Unit = {
+        val jsonObject = Json.parse(msg)
+        val action = (jsonObject \ "action").get.as[String]
+
+       action match {
+            case "callRummyController" =>  {
+                val param = (jsonObject \ "param").get.as[String]
+                println("process param " + param)
+                this.rummy(param)
+                this.test()
+            }
+            case "addNameOfPlayer" => {
+                val name = (jsonObject \ "name").get.as[String]
+                println("process name " + name)
+                nameInput(name)
+            }
+        }
+//        Ok(result)
+    }
+    def test(): Unit = {
+        println("test")
+    }
+
+    def socket() = {
+        WebSocket.accept[String, String] { request =>
+            ActorFlow.actorRef { out =>
+                println("Connect received")
+                RummyWebSocketActorFactory.create(out)
+            }
+        }
+    }
+
+    object RummyWebSocketActorFactory {
+        def create(out: ActorRef) = {
+            Props(new RummyWebSocketActor(out))
+        }
+    }
+
+    class RummyWebSocketActor(out: ActorRef) extends Actor with Reactor {
+        rummyController.add(() => {
+            sendJsonToClient
+        })
+
+        def receive = {
+            case msg: String =>
+                out ! (rummyController.deskToJson().toString())
+                processSocketInput(msg)
+                println("Sent Json to Client"+ msg)
+        }
+
+        def sendJsonToClient = {
+            println("Received event from Controller")
+            out ! (rummyController.deskToJson().toString())
+        }
     }
 
 }
