@@ -4,13 +4,6 @@
 # ~~~~
 
 # An example controller showing a sample home page
-#GET         /getDesk                controllers.RummyController.getDesk
-#GET         /getViewOfBoard         controllers.RummyController.getViewOfBoard
-
-#GET         /                       controllers.RummyController.newGame()
-#GET         /rummy                  controllers.RummyController.newGame()
-#GET         /rules                  controllers.RummyController.rules
-
 GET         /socket                 controllers.RummyController.socket()
 
 # Map static resources from the /public folder to the /assets URL path
