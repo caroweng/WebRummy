@@ -3,7 +3,6 @@ target
 /.idea
 /.idea_modules
 /.classpath
-/.project
 /.settings
 /RUNNING_PID
 .DS_Store
@@ -12,5 +11,4 @@ target
 *.log
 
 target/**
-project/**
 .idea/**
