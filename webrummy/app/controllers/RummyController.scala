@@ -34,47 +34,9 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
     var rummyAsString: String = ""
     var selectedToMove: String = ""
 
-
-
-
     rummyController.add(() => {
         rummyAsString = rummyController.currentStateAsString()
     })
-
-    def state():  Action[AnyContent] = Action {
-        var stateString: String = ""
-        rummyController.controllerState match {
-            case ControllerState.NEW_GAME => stateString = "NEW_GAME"
-            case ControllerState.INSERTING_NAMES => stateString = "INSERTING_NAMES"
-            case ControllerState.P_TURN => stateString = "P_TURN"
-            case ControllerState.P_FINISHED => stateString = "P_FINISHED"
-        }
-        Ok(stateString)
-    }
-
-    def getDesk():  Action[AnyContent] = Action {
-        val deskAsJson = rummyController.deskToJson()
-        Ok(deskAsJson)
-    }
-
-    def getViewOfBoard():  Action[AnyContent] = Action {
-        var stateString: String = ""
-        rummyController.controllerState match {
-            case ControllerState.NEW_GAME => stateString = "NEW_GAME"
-            case ControllerState.INSERTING_NAMES => stateString = "INSERTING_NAMES"
-            case ControllerState.P_TURN => stateString = "P_TURN"
-            case ControllerState.P_FINISHED => stateString = "P_FINISHED"
-        }
-        Ok(stateString)
-    }
-
-    def newGame(): Action[AnyContent] = Action{
-        Ok(views.html.rummy(rummyController))
-    }
-
-    def rules(): Action[AnyContent] = Action {
-        Ok(views.html.rules())
-    }
 
     def nameInput(name: String) = {
         val correctInput: String = "name " + name
@@ -82,11 +44,6 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
         this.rummy(correctInput)
     }
 
-    def getCurrentPlayerName(): Action[AnyContent] = Action {
-        Ok(rummyController.currentP.name)
-    }
-
-//    def rummy(input: String): Action[AnyContent] = Action {
     def rummy(input: String): Unit =  {
         println("in rummy()")
         println(input)
@@ -102,9 +59,6 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
         } else {
             processInput(correctInput)
         }
-//        println(Ordering(rummyController.desk.board))
-//        val set: scala.collection.SortedSet[TileInterface] = rummyController.desk.board
-//        Ok(views.html.rummy(rummyController))
     }
 
     def processInput(input: String): Unit = {
@@ -160,6 +114,7 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
     }
 
     def processSocketInput(msg: String): Unit = {
+        println("msg: " + msg);
         val jsonObject = Json.parse(msg)
         val action = (jsonObject \ "action").get.as[String]
 
@@ -168,18 +123,16 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
                 val param = (jsonObject \ "param").get.as[String]
                 println("process param " + param)
                 this.rummy(param)
-                this.test()
             }
             case "addNameOfPlayer" => {
                 val name = (jsonObject \ "name").get.as[String]
                 println("process name " + name)
                 nameInput(name)
             }
+            case "getGame" => {
+
+            }
         }
-//        Ok(result)
-    }
-    def test(): Unit = {
-        println("test")
     }
 
     def socket() = {
@@ -201,6 +154,7 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
         rummyController.add(() => {
             sendJsonToClient
         })
+        sendJsonToClient
 
         def receive = {
             case msg: String =>
@@ -210,7 +164,7 @@ class RummyController @Inject()(cc: ControllerComponents) (implicit system: Acto
         }
 
         def sendJsonToClient = {
-            println("Received event from Controller")
+//            println("Received event from Controller")
             out ! (rummyController.deskToJson().toString())
         }
     }
